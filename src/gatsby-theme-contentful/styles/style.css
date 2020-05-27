@@ -68,6 +68,10 @@ ol {
     @apply list-decimal;
 }
 
+td {
+    @apply pr-5;
+}
+
 @tailwind components;
 
 .bgPrimary {
