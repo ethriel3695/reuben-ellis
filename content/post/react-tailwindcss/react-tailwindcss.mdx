@@ -1,0 +1,225 @@
+---
+slug: /react-tailwind-components
+label: Available Components
+title: React and Tailwind Components
+description: My current list of available components/templates in this Theme and available for Shadowing
+date: 2020-05-25
+categories: ['react', 'node', 'gatsby', 'theme', 'contentful', 'tailwindCSS']
+published: true
+---
+
+## Button
+
+```jsx
+import PropTypes from 'prop-types';
+import React from 'react';
+
+const Button = ({ children, href, ...params }) => {
+  const className = `inline-block px-5 py-2 mr-1 sm:mb-1 font-medium leading-snug border border-transparent text-base 
+    rounded-md focus:outline-none focus:shadow-outline transition duration-150 ease-in-out bgPrimary`;
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {children}
+      </a>
+    );
+  } else {
+    return (
+      <button className={className} {...params}>
+        {children}
+      </button>
+    );
+  }
+};
+
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  href: PropTypes.string,
+};
+
+Button.defaultProps = {
+  href: null,
+};
+
+export default Button;
+```
+
+## NavItem
+
+```jsx
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Link } from 'gatsby';
+import classNames from 'classnames';
+
+const NavItem = ({ children, href, classes, ...params }) => {
+  const className = `ml-6 sm:ml-8 text-sm sm:text-base font-medium px-px border-b-2 pb-2 border-transparent text-gray-700
+     hover:text-gray-800 borderPrimary transition duration-150 ease-in-out no-underline`;
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classNames(className, classes)}
+      >
+        {children}
+      </a>
+    );
+  } else {
+    return (
+      <Link className={classNames(className, classes)} {...params}>
+        {children}
+      </Link>
+    );
+  }
+};
+
+NavItem.propTypes = {
+  children: PropTypes.node.isRequired,
+  href: PropTypes.string,
+};
+
+NavItem.defaultProps = {
+  href: null,
+};
+
+export default NavItem;
+```
+
+### Example Use (Desktop)
+
+```jsx
+{
+  navs.map((nav, key) => (
+    <NavItem
+      key={`menu_desktop_link${key}`}
+      to={nav.route}
+      activeClassName="borderPrimaryActive"
+    >
+      {nav.label}
+    </NavItem>
+  ));
+}
+```
+
+### Example Use (Mobile)
+
+```jsx
+{
+  navs.map((nav, key) => (
+    <NavItem
+      key={`menu_mobile_link${key}`}
+      to={nav.route}
+      className="font-semibold text-4xl text-gray-300 no-underline"
+      activeClassName="textPrimary"
+    >
+      {nav.label}
+    </NavItem>
+  ));
+}
+```
+
+## RegularGoogleMap
+
+```jsx
+import React from 'react';
+// react components used to create a google map
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker,
+} from 'react-google-maps';
+
+const RegularMap = withScriptjs(
+  withGoogleMap(() => (
+    <GoogleMap
+      defaultZoom={13}
+      defaultCenter={{
+        lat: parseFloat(process.env.GATSBY_GOOGLE_LATITUDE),
+        lng: parseFloat(process.env.GATSBY_GOOGLE_LONGITUDE),
+      }}
+      defaultOptions={{
+        scrollwheel: false,
+      }}
+    >
+      <Marker
+        position={{
+          lat: parseFloat(process.env.GATSBY_GOOGLE_LATITUDE),
+          lng: parseFloat(process.env.GATSBY_GOOGLE_LONGITUDE),
+        }}
+      />
+    </GoogleMap>
+  )),
+);
+
+export default function GoogleMaps() {
+  return (
+    <div className="rounded overflow-hidden shadow-lg">
+      <h4>{process.env.GATSBY_GOOGLE_MAP_DESC || ''}</h4>
+      <div>
+        <RegularMap
+          googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.GATSBY_GOOGLE_MAPS_API_KEY}`}
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={
+            <div
+              style={{
+                height: `280px`,
+                borderRadius: '6px',
+                overflow: 'hidden',
+              }}
+            />
+          }
+          mapElement={<div style={{ height: `100%` }} />}
+        />
+      </div>
+    </div>
+  );
+}
+```
+
+### Example Use
+
+```jsx
+// Example of using google map
+import GoogleMaps from 'gatsby-theme-contentful/src/components/Maps/RegularGoogleMap';
+
+<GoogleMaps />;
+```
+
+## GoogleCalendar
+
+```jsx
+import React from 'react';
+
+export default function GoogleCalendar() {
+  return (
+    <div calssName="flex flex-col align-center">
+      <iframe
+        src={process.env.GATSBY_GOOGLE_CALENDAR_URL}
+        style={{ border: 0, frameborder: 0, scrolling: 'no' }}
+        width="100%"
+        height="600"
+        title={'calendar'}
+      ></iframe>
+    </div>
+  );
+}
+```
+
+### Example Use
+
+```jsx
+// Example of using google calendar
+import GoogleCalendar from 'gatsby-theme-contentful/src/components/Calendar/GoogleCalendar';
+
+<GoogleCalendar />;
+```
