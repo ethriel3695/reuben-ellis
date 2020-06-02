@@ -8,6 +8,116 @@ categories: ['react', 'node', 'gatsby', 'theme', 'contentful', 'tailwindCSS']
 published: true
 ---
 
+## MDX Rendering
+
+```jsx
+import React from 'react';
+import Img from 'gatsby-image';
+import classNames from 'classnames';
+import { MDXRenderer } from 'gatsby-plugin-mdx';
+import { MDXProvider } from '@mdx-js/react';
+
+const Pre = props => (
+  <pre
+    {...props}
+    className="font-mono scrollbar-none text-white bg-gray-800 overflow-auto rounded-md"
+  />
+);
+const Code = props => (
+  <code
+    {...props}
+    className={classNames(
+      'inline-block p-4 scrolling-touch subpixel-antialiased',
+      props.className,
+    )}
+  />
+);
+
+const InlineCode = props => (
+  <code {...props} className="font-mono bg-yellow-200 p-1" />
+);
+
+const components = {
+  pre: Pre,
+  code: Code,
+  inlineCode: InlineCode,
+};
+
+export default function PostContainer({ data, frontmatter }) {
+  const { banner, title, date, showBanner } = frontmatter;
+
+  return (
+    <div className="post-single-container">
+      <article className="post-single">
+        <header>
+          {banner && showBanner ? (
+            <Img
+              fluid={banner.sharp.fluid}
+              alt={title}
+              style={{ height: '70vh', textAlign: 'center' }}
+            />
+          ) : null}
+          <h1 className="text-center">{title}</h1>
+          <div className="text-md text-center">
+            <span>{date}</span>
+          </div>
+        </header>
+        <div className="text-left container">
+          <MDXProvider components={components}>
+            <MDXRenderer>{data}</MDXRenderer>
+          </MDXProvider>
+        </div>
+      </article>
+    </div>
+  );
+}
+```
+
+## Blog Articles (Card Format)
+
+```jsx
+import React from 'react';
+import { useBlogData } from '../../hooks/blogData';
+
+const Blog = () => {
+  const blog = useBlogData();
+  return (
+    <div className="container">
+      <h1>Blog</h1>
+      <div className="grid grid-cols-1 lg:grid-cols-2 mt-20">
+        {blog.allMdx.nodes &&
+          blog.allMdx.nodes.map((article, index) => {
+            const date = new Date(article.frontmatter.date);
+            return (
+              <a
+                href={`${article.frontmatter.slug}`}
+                className="col-span-12 lg:col-span-1 p-3 md:p-6 shadow-lg hover:shadow-2xl rounded-md overflow-hidden cursor-pointer no-underline text-black"
+                key={`article-${index}`}
+              >
+                <h2>{article.frontmatter.title}</h2>
+                <p className="py-6">{article.frontmatter.description}</p>
+                <span>{`${date}`}</span>
+                <div className="grid grid-cols-3 lg:grid-cols-6">
+                  {article.frontmatter.categories &&
+                    article.frontmatter.categories.map(category => {
+                      return (
+                        <p className="shadow-outline border-aqua px-1 mr-2 text-center">
+                          {category}
+                        </p>
+                      );
+                    })}
+                </div>
+              </a>
+            );
+          })}
+      </div>
+    </div>
+  );
+};
+
+export default Blog;
+```
+
 ## Button
 
 ```jsx
