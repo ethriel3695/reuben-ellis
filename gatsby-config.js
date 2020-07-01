@@ -32,8 +32,9 @@ module.exports = {
     social: {
       facebook: 'https://www.facebook.com/reuben.ellis.338',
       twitter: '',
+      instagram: '',
       github: 'https://www.github.com/ethriel3695',
-      email: 'ethriel3695@gmail.com',
+      email: 'mailto:ethriel3695@gmail.com',
     },
     externalLinks: [{ label: '', link: '' }],
     hasNotifications: false,
